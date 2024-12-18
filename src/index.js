@@ -1,6 +1,7 @@
 "use strict";
 
 /** @typedef {import('express').Router} Router */
+/** @typedef {import('express').Request} Request */
 /** @typedef {import('express').Response} Response */
 
 /**
@@ -11,7 +12,7 @@ const JsonRPCEndpoint = class {
      /** @type {string} */
     #endpoint;
     
-    /** @type {{ [name: string]: (res: Response, context: C, params: any) => any|Promise<any> }} */
+    /** @type {{ [name: string]: (req: Request, context: C, params: any) => any|Promise<any> }} */
     #methods = {};
 
     /**
@@ -39,7 +40,7 @@ const JsonRPCEndpoint = class {
             }
 
             try {
-                Promise.resolve(handler(res, context, params))
+                Promise.resolve(handler(req, context, params))
                     .then(result => {
                         // Before sending, serialize BigInts to strings
                         const safeResult = this.serializeBigInts(result);
@@ -65,7 +66,7 @@ const JsonRPCEndpoint = class {
     /** @returns {string} */
     get endpoint() { return this.#endpoint; }
 
-    /** @returns {{ [name: string]: (res: Response, context: C, params: any) => any|Promise<any> }} */
+    /** @returns {{ [name: string]: (req: Request, context: C, params: any) => any|Promise<any> }} */
     get methods() { return this.#methods; }
 
     /**
