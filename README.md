@@ -60,7 +60,6 @@ const express = require('express');
 const JsonRPCEndpoint = require('json-rpc-api-endpoint');
 
 const app = express();
-const router = express.Router();
 
 // Middleware to parse JSON bodies
 app.use(express.json());
@@ -68,8 +67,10 @@ app.use(express.json());
 // Context object to pass to method handlers
 const context = { /* your context data */ };
 
-// Initialize JSON-RPC endpoint
-const rpc = new JsonRPCEndpoint(router, context);
+// Attach to the app router at POST /api endpoint
+// If you want to attach to another endpoint you can pass it to the constructor
+// es: const rpc = new JsonRPCEndpoint(app, context, '/my-custom-endpoint');
+const rpc = new JsonRPCEndpoint(app, context);
 
 // Add RPC methods
 rpc.addMethod('add', (req, ctx, params) => {
@@ -97,9 +98,6 @@ function isValidToken(token) {
     const expectedToken = 'my-secret-token'; // Replace with your actual token handling logic
     return token === expectedToken;
 }
-
-// Attach the router to the app
-app.use('/api', router);
 
 // Start the server
 const PORT = process.env.PORT || 3000;
