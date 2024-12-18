@@ -207,13 +207,13 @@ const express = require('express');
 const JsonRPCEndpoint = require('json-rpc-api-endpoint');
 
 const app = express();
-const router = express.Router();
 
 app.use(express.json());
 
 const context = { user: 'admin' };
 
-const rpc = new JsonRPCEndpoint(router, context);
+// Attach to the app router at POST /api endpoint
+const rpc = new JsonRPCEndpoint(app, context);
 
 rpc.addMethod('greet', (req, ctx, params) => {
     const { name } = params;
@@ -223,8 +223,6 @@ rpc.addMethod('greet', (req, ctx, params) => {
 rpc.addMethod('getTime', () => {
     return new Date().toISOString();
 });
-
-app.use('/api', router);
 
 const PORT = 3000;
 app.listen(PORT, () => {

@@ -7,6 +7,7 @@ app.use(express.json());
 
 const context = { user: 'admin' };
 
+// Attach to the app router at POST /api endpoint
 const rpc = new JsonRPCEndpoint(app, context);
 
 rpc.addMethod('greet', (ctx, params) => {
