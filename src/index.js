@@ -11,7 +11,7 @@ const JsonRPCEndpoint = class {
      /** @type {string} */
     #endpoint;
     
-    /** @type {{ [name: string]: (context: C, params: any) => any|Promise<any> }} */
+    /** @type {{ [name: string]: (res: Response, context: C, params: any) => any|Promise<any> }} */
     #methods = {};
 
     /**
@@ -39,14 +39,14 @@ const JsonRPCEndpoint = class {
             }
 
             try {
-                Promise.resolve(handler(context, params))
+                Promise.resolve(handler(res, context, params))
                     .then(result => {
                         // Before sending, serialize BigInts to strings
                         const safeResult = this.serializeBigInts(result);
                         this.reply(res, { id, result: safeResult });
                     })
                     .catch(err => {
-                        this.reply(res, { id, error: { code: -32603, message: err.message || "Internal error" } });
+                        this.reply(res, { id, error: { code: err.code || -32603, message: err.message || "Internal error" } });
                     });
             } catch (err) {
                 this.reply(res, { id, error: { code: -32603, message: err.message || "Internal error" } });
@@ -65,7 +65,7 @@ const JsonRPCEndpoint = class {
     /** @returns {string} */
     get endpoint() { return this.#endpoint; }
 
-    /** @returns {{ [name: string]: (context: C, params: any) => any|Promise<any> }} */
+    /** @returns {{ [name: string]: (res: Response, context: C, params: any) => any|Promise<any> }} */
     get methods() { return this.#methods; }
 
     /**

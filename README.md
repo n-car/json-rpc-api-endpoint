@@ -72,15 +72,31 @@ const context = { /* your context data */ };
 const rpc = new JsonRPCEndpoint(router, context);
 
 // Add RPC methods
-rpc.addMethod('add', (ctx, params) => {
+rpc.addMethod('add', (req, ctx, params) => {
     const { a, b } = params;
     return a + b;
 });
 
-rpc.addMethod('subtract', (ctx, params) => {
+rpc.addMethod('subtract', (req, ctx, params) => {
     const { a, b } = params;
     return a - b;
 });
+
+rpc.addMethod('invalid-token', (req, ctx, params) => {
+    // Example: Validate the token from request headers
+    const token = req.headers.authorization;
+    if (!token || !isValidToken(token)) { // Replace `isValidToken` with your validation logic
+        throw new Error('Invalid or missing token');
+    }
+    return 'OK';
+});
+
+// Example token validation function (replace with your actual logic)
+function isValidToken(token) {
+    // Simple example: Check if the token matches a predefined value
+    const expectedToken = 'my-secret-token'; // Replace with your actual token handling logic
+    return token === expectedToken;
+}
 
 // Attach the router to the app
 app.use('/api', router);
@@ -98,13 +114,13 @@ You can add RPC methods using the `addMethod` function. Each method receives the
 
 ```javascript
 // Synchronous method
-rpc.addMethod('multiply', (ctx, params) => {
+rpc.addMethod('multiply', (req, ctx, params) => {
     const { a, b } = params;
     return a * b;
 });
 
 // Asynchronous method
-rpc.addMethod('divide', async (ctx, params) => {
+rpc.addMethod('divide', async (req, ctx, params) => {
     const { a, b } = params;
     if (b === 0) {
         throw new Error('Division by zero');
@@ -137,10 +153,10 @@ addMethod(name, handler)
 ```
 
 - **name**: *(string)* - The name of the RPC method.
-- **handler**: *(Function)* - The function that handles the method. Receives `context` and `params` as arguments.
+- **handler**: *(Function)* - The function that handles the method. Receives `req` (the Request object) `context` and `params` as arguments.
 
   ```javascript
-  (context, params) => { /* ... */ }
+  (req, context, params) => { /* ... */ }
   ```
 
 #### Properties
@@ -199,7 +215,7 @@ const context = { user: 'admin' };
 
 const rpc = new JsonRPCEndpoint(router, context);
 
-rpc.addMethod('greet', (ctx, params) => {
+rpc.addMethod('greet', (req, ctx, params) => {
     const { name } = params;
     return `Hello, ${name}!`;
 });
