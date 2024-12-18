@@ -1,0 +1,73 @@
+{
+  "name": "json-rpc-api-endpoint",
+  "version": "1.0.0",
+  "description": "A lightweight and flexible JSON-RPC 2.0 endpoint for Express.js applications.",
+  "main": "src/index.js",
+  "files": [
+    "src/",
+    "examples/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint .",
+    "clean": "rm -rf dist",
+    "precommit": "npm run lint && npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/n-car/json-rpc-api-endpoint.git"
+  },
+  "keywords": [
+    "json-rpc",
+    "express",
+    "api",
+    "endpoint",
+    "rpc",
+    "middleware",
+    "bigint",
+    "nodejs"
+  ],
+  "author": "Nicola Carpanese <nicola.carpanese@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/n-car/json-rpc-api-endpoint/issues"
+  },
+  "homepage": "https://github.com/n-car/json-rpc-api-endpoint#readme",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.1",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "husky": "^8.0.0",
+    "jest": "^29.7.0",
+    "lint-staged": "^13.0.0",
+    "prettier": "^3.4.2"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "contributors": [
+    {
+      "name": "Nicola Carpanese",
+      "email": "nicola.carpanese@gmail.com",
+      "url": "https://github.com/n-car"
+    }
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  }
+}
