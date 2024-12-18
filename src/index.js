@@ -27,16 +27,16 @@ const JsonRPCEndpoint = class {
 
             // Validate JSON-RPC 2.0 request
             if (jsonrpc !== "2.0") {
-                return this.reply(res, { id, error: { code: -32600, message: "Invalid Request: 'jsonrpc' must be '2.0'." } });
+                return this.reply(res, { id, error: { code: -32600, message: `Invalid Request: 'jsonrpc' must be '2.0'.` } });
             }
 
             if (typeof method !== "string") {
-                return this.reply(res, { id, error: { code: -32600, message: "Invalid Request: 'method' must be a string." } });
+                return this.reply(res, { id, error: { code: -32600, message: `Invalid Request: 'method' must be a string.` } });
             }
 
             const handler = this.#methods[method];
             if (!handler) {
-                return this.reply(res, { id, error: { code: -32601, message: "Method not found" } });
+                return this.reply(res, { id, error: { code: -32601, message: `Method "${method}"not found` } });
             }
 
             try {
@@ -47,10 +47,10 @@ const JsonRPCEndpoint = class {
                         this.reply(res, { id, result: safeResult });
                     })
                     .catch(err => {
-                        this.reply(res, { id, error: { code: err.code || -32603, message: err.message || "Internal error" } });
+                        this.reply(res, { id, error: { code: err.code || -32603, message: err.message || `Internal error` } });
                     });
             } catch (err) {
-                this.reply(res, { id, error: { code: -32603, message: err.message || "Internal error" } });
+                this.reply(res, { id, error: { code: -32603, message: err.message || `Internal error` } });
             }
         });
     }
