@@ -216,17 +216,6 @@ app.listen(PORT, () => {
 });
 ```
 
-### Guidelines
-
-- **Code Style:** Follow the existing code style and linting rules.
-- **Testing:** Ensure all tests pass and add new tests for your features.
-- **Documentation:** Update the README and inline documentation as needed.
-- **Commit Messages:** Use clear and descriptive commit messages.
-
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
-
-## Contact
-
-If you have any questions or suggestions, feel free to open an issue or contact [Nicola Carpanese](mailto:nicola.carpanese@gmail.com).
