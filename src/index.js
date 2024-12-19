@@ -57,7 +57,7 @@ const JsonRPCEndpoint = class {
 
     /**
      * @param {string} name 
-     * @param {(context: C, params: any) => any|Promise<any>} handler 
+     * @param {(req: Request, context: C, params: any) => any|Promise<any>} handler 
      */
     addMethod(name, handler) {
         this.#methods[name] = handler;
