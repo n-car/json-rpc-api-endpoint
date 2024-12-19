@@ -40,13 +40,13 @@ A lightweight and flexible JSON-RPC 2.0 endpoint for Express.js applications. Ea
 You can install the package via npm:
 
 ```bash
-npm install json-rpc-api-endpoint
+npm install n-car/json-rpc-api-endpoint
 ```
 
 Or using yarn:
 
 ```bash
-yarn add json-rpc-api-endpoint
+yarn add n-car/json-rpc-api-endpoint
 ```
 
 ## Usage
