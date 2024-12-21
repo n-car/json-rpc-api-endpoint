@@ -1,6 +1,7 @@
 "use strict";
 
 const path = require('path');
+const express = require('express');
 
 /** @typedef {import('express').Router} Router */
 /** @typedef {import('express').Request} Request */
@@ -18,24 +19,7 @@ const JsonRPCEndpoint = class {
      * Default is '/vendor/json-rpc-api-client'.
      */
     static serveScripts = (router, url = '/vendor/json-rpc-api-client') => {
-        
-        const files = [
-            'json-rpc-api-client.js',
-            'json-rpc-api-client.min.js',
-            'json-rpc-api-client.mjs',
-            'json-rpc-api-client.min.mjs',
-        ];
-
-        router.post(url, (req, res, next) => {
-            let fileToServe = files.find(file => req.url === `${url}/${file}`);
-            if (fileToServe) {
-                res.setHeader('Content-Type', 'application/javascript');
-                res.sendFile(path.join(__dirname, 'client-scripts', fileToServe));
-            } else {
-                next();
-            }
-        });
-        
+        router.use(url, express.static(path.join(__dirname, 'client-scripts')));
     }
 
     /** @type {string} */
