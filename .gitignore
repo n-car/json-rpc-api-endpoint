@@ -49,7 +49,7 @@ temp/
 *.swp
 
 # TypeScript declaration files (if not needed)
-*.d.ts
+#*.d.ts
 
 # Optional TypeScript cache
 *.tsbuildinfo
