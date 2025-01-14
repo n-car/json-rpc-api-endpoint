@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "A lightweight and flexible JSON-RPC 2.0 endpoint for Express.js applications.",
   "main": "src/index.js",
+  "types": "src/index.d.ts",
   "files": [
     "src/",
     "examples/",
