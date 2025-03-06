@@ -7,6 +7,55 @@ const express = require("express");
 /** @typedef {import("express").Request} Request */
 /** @typedef {import("express").Response} Response */
 
+const NestedError = require('nested-error-stacks');
+
+/**
+ * Default properties to include in error serialization.
+ * @type {Array<string>}
+ */
+const defaultProperties = [
+  'stackTraceLimit', 'cause', 'code', 'message', 'stack', 'address',
+  'dest', 'errno', 'info', 'path', 'port', 'syscall', 'opensslErrorStack',
+  'function', 'library', 'reason'
+];
+
+/**
+ * Serializes an error into a JSON-compatible format, with optional sanitization.
+ * @param {Error | NestedError | Object} error - The error to serialize.
+ * @param {boolean} sanitize - Whether to remove sensitive fields.
+ * @param {Array<string>} properties - Properties to include in serialization.
+ * @returns {Object} The serialized error.
+ */
+const serializeError = (error, sanitize = false, properties = defaultProperties) => {
+  if (error === null || error === undefined) return error;
+
+  const result = {};
+  const includeProperties = sanitize
+      ? properties.filter(prop => !['address', 'path'].includes(prop))
+      : properties;
+
+  includeProperties.forEach(prop => {
+      if (error?.[prop] !== undefined) {
+          result[prop] = error[prop];
+      }
+  });
+
+  if (error instanceof NestedError) {
+      result.type = 'NestedError';
+      if (error.nested) result.nested = serializeError(error.nested, sanitize, properties);
+  } else if (error instanceof Error) {
+      result.type = 'Error';
+  } else if (error instanceof Object) {
+      result.type = 'Object';
+      Object.assign(result, error);
+  } else {
+      result.type = 'Default';
+      result.instance = error;
+  }
+
+  return result;
+};
+
 /**
  * @template C
  */
@@ -73,13 +122,13 @@ class JsonRPCEndpoint {
           .catch((err) => {
             this.reply(res, {
               id,
-              error: { code: err.code || -32603, message: err.message || `Internal error` }
+              error: { code: err.code || -32603, message: err.message || `Internal error`, error: serializeError(err, true) }
             });
           });
       } catch (err) {
         this.reply(res, {
           id,
-          error: { code: -32603, message: err.message || `Internal error` }
+          error: { code: -32603, message: err.message || `Internal error`, error: serializeError(err, true) }
         });
       }
     });
