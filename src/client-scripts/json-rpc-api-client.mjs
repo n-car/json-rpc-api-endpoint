@@ -45,13 +45,8 @@ export class JsonRPCClient {
       }
 
       const responseBody = await response.json();
-      console.dir(responseBody); // For debugging
 
-      if (responseBody.error) {
-        throw new Error(
-          `RPC Error: ${responseBody.error.message} (Code: ${responseBody.error.code})`
-        );
-      }
+      if (responseBody.error) { throw responseBody.error; }
 
       // Convert back BigInts and Dates in the result
       return this.deserializeBigIntsAndDates(responseBody.result);
